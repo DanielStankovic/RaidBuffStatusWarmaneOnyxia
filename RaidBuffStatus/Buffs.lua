@@ -2973,93 +2973,93 @@ local BF = {
 		end,
 	},
 
-	runescrollfortitude = {
-		order = 425,
-		list = "runescrollfortitudelist",
-		check = "checkrunescrollfortitude",
-		default = true,
-		defaultbuff = true,
-		defaultwarning = false,
-		defaultdash = true,
-		defaultdashcombat = false,
-		defaultboss = true,
-		defaulttrash = false,
-		checkzonedout = false,
-		chat = BS[69377], -- Fortitude
-		pre = function(self, raid, report)
-			if raid.ClassNumbers.PRIEST > 0 or not oRA or not raid.israid or raid.isbattle then
-				return
-			end
-			if not RaidBuffStatus.itemcheck.runescrollfortitude then
-				RaidBuffStatus.itemcheck.runescrollfortitude = {}
-				RaidBuffStatus.itemcheck.runescrollfortitude.results = {}
-				RaidBuffStatus.itemcheck.runescrollfortitude.list = "runescrollfortitudelist"
-				RaidBuffStatus.itemcheck.runescrollfortitude.check = "runescrollfortitude"
-				RaidBuffStatus.itemcheck.runescrollfortitude.next = 0
-				RaidBuffStatus.itemcheck.runescrollfortitude.item = "49632" -- Runescroll of Fortitude
-				RaidBuffStatus.itemcheck.runescrollfortitude.min = 0
-				RaidBuffStatus.itemcheck.runescrollfortitude.frequency = 60 * 5
-				RaidBuffStatus.itemcheck.runescrollfortitude.frequencymissing = 60 * 5
-			end
-		end,
-		main = function(self, name, class, unit, raid, report)
-			if raid.ClassNumbers.PRIEST > 0 then
-				return
-			end
-			report.checking.runescrollfortitude = true
-			if not unit.hasbuff[BS[69377]] then -- Fortitude
-				table.insert(report.runescrollfortitudelist, name)
-			end
-		end,
-		post = nil,
-		icon = ITT[49632], -- Runescroll of Fortitude
-		update = function(self)
-			RaidBuffStatus:DefaultButtonUpdate(self, report.runescrollfortitudelist, RaidBuffStatus.db.profile.checkrunescrollfortitude, report.checking.runescrollfortitude or false, RaidBuffStatus.BF.runescrollfortitude:buffers())
-		end,
-		click = function(self, button, down)
-			RaidBuffStatus:ButtonClick(self, button, down, "runescrollfortitude", nil, nil, nil, nil, ITN[49632]) -- Runescroll of Fortitude
-		end,
-		tip = function(self)
-			RaidBuffStatus:Tooltip(self, L["Missing "] .. ITN[49632], report.runescrollfortitudelist, nil, RaidBuffStatus.BF.runescrollfortitude:buffers()) -- Runescroll of Fortitude
-		end,
-		singlebuff = false,
-		partybuff = false,
-		raidbuff = true,
-		whispertobuff = function(reportl, prefix)
-			local thebuffers = RaidBuffStatus.BF.runescrollfortitude:buffers()
-			if not thebuffers then
-				return
-			end
-			for _,name in ipairs(thebuffers) do
-				name = string.sub(name, 1, name:find("%(") - 1)
-				if RaidBuffStatus:InMyZone(name) then
-					if RaidBuffStatus.db.profile.WhisperMany and #reportl >= RaidBuffStatus.db.profile.HowMany then
-						RaidBuffStatus:Say(prefix .. "<" .. RaidBuffStatus.BF.runescrollfortitude.chat .. ">: " .. L["MANY!"], name)
-					else
-						RaidBuffStatus:Say(prefix .. "<" .. RaidBuffStatus.BF.runescrollfortitude.chat .. ">: " .. table.concat(reportl, ", "), name)
-					end
-					if RaidBuffStatus.db.profile.whisperonlyone then
-						return
-					end
-				end
-			end
-		end,
-		buffers = function()
-			if not RaidBuffStatus.itemcheck.runescrollfortitude then
-				return
-			end
-			local thebuffers = {}
-				for _,rc in pairs(raid.classes) do
-					for name,_ in pairs(rc) do
-						local items = RaidBuffStatus.itemcheck.runescrollfortitude.results[name] or 0
-						if items > 0 then
-							table.insert(thebuffers, name .. "(" .. items .. ")")
-						end
-					end
-				end
-			return thebuffers
-		end,
-	},
+	-- runescrollfortitude = {
+		-- order = 425,
+		-- list = "runescrollfortitudelist",
+		-- check = "checkrunescrollfortitude",
+		-- default = true,
+		-- defaultbuff = true,
+		-- defaultwarning = false,
+		-- defaultdash = true,
+		-- defaultdashcombat = false,
+		-- defaultboss = true,
+		-- defaulttrash = false,
+		-- checkzonedout = false,
+		-- chat = BS[69377], -- Fortitude
+		-- pre = function(self, raid, report)
+			-- if raid.ClassNumbers.PRIEST > 0 or not oRA or not raid.israid or raid.isbattle then
+				-- return
+			-- end
+			-- if not RaidBuffStatus.itemcheck.runescrollfortitude then
+				-- RaidBuffStatus.itemcheck.runescrollfortitude = {}
+				-- RaidBuffStatus.itemcheck.runescrollfortitude.results = {}
+				-- RaidBuffStatus.itemcheck.runescrollfortitude.list = "runescrollfortitudelist"
+				-- RaidBuffStatus.itemcheck.runescrollfortitude.check = "runescrollfortitude"
+				-- RaidBuffStatus.itemcheck.runescrollfortitude.next = 0
+				-- RaidBuffStatus.itemcheck.runescrollfortitude.item = "49632" -- Runescroll of Fortitude
+				-- RaidBuffStatus.itemcheck.runescrollfortitude.min = 0
+				-- RaidBuffStatus.itemcheck.runescrollfortitude.frequency = 60 * 5
+				-- RaidBuffStatus.itemcheck.runescrollfortitude.frequencymissing = 60 * 5
+			-- end
+		-- end,
+		-- main = function(self, name, class, unit, raid, report)
+			-- if raid.ClassNumbers.PRIEST > 0 then
+				-- return
+			-- end
+			-- report.checking.runescrollfortitude = true
+			-- if not unit.hasbuff[BS[69377]] then -- Fortitude
+				-- table.insert(report.runescrollfortitudelist, name)
+			-- end
+		-- end,
+		-- post = nil,
+		-- icon = ITT[49632], -- Runescroll of Fortitude
+		-- update = function(self)
+			-- RaidBuffStatus:DefaultButtonUpdate(self, report.runescrollfortitudelist, RaidBuffStatus.db.profile.checkrunescrollfortitude, report.checking.runescrollfortitude or false, RaidBuffStatus.BF.runescrollfortitude:buffers())
+		-- end,
+		-- click = function(self, button, down)
+			-- RaidBuffStatus:ButtonClick(self, button, down, "runescrollfortitude", nil, nil, nil, nil, ITN[49632]) -- Runescroll of Fortitude
+		-- end,
+		-- tip = function(self)
+			-- RaidBuffStatus:Tooltip(self, L["Missing "] .. ITN[49632], report.runescrollfortitudelist, nil, RaidBuffStatus.BF.runescrollfortitude:buffers()) -- Runescroll of Fortitude
+		-- end,
+		-- singlebuff = false,
+		-- partybuff = false,
+		-- raidbuff = true,
+		-- whispertobuff = function(reportl, prefix)
+			-- local thebuffers = RaidBuffStatus.BF.runescrollfortitude:buffers()
+			-- if not thebuffers then
+				-- return
+			-- end
+			-- for _,name in ipairs(thebuffers) do
+				-- name = string.sub(name, 1, name:find("%(") - 1)
+				-- if RaidBuffStatus:InMyZone(name) then
+					-- if RaidBuffStatus.db.profile.WhisperMany and #reportl >= RaidBuffStatus.db.profile.HowMany then
+						-- RaidBuffStatus:Say(prefix .. "<" .. RaidBuffStatus.BF.runescrollfortitude.chat .. ">: " .. L["MANY!"], name)
+					-- else
+						-- RaidBuffStatus:Say(prefix .. "<" .. RaidBuffStatus.BF.runescrollfortitude.chat .. ">: " .. table.concat(reportl, ", "), name)
+					-- end
+					-- if RaidBuffStatus.db.profile.whisperonlyone then
+						-- return
+					-- end
+				-- end
+			-- end
+		-- end,
+		-- buffers = function()
+			-- if not RaidBuffStatus.itemcheck.runescrollfortitude then
+				-- return
+			-- end
+			-- local thebuffers = {}
+				-- for _,rc in pairs(raid.classes) do
+					-- for name,_ in pairs(rc) do
+						-- local items = RaidBuffStatus.itemcheck.runescrollfortitude.results[name] or 0
+						-- if items > 0 then
+							-- table.insert(thebuffers, name .. "(" .. items .. ")")
+						-- end
+					-- end
+				-- end
+			-- return thebuffers
+		-- end,
+	-- },
 
 	shadow = {
 		order = 420,
