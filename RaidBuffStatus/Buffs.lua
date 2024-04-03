@@ -4081,7 +4081,7 @@ local BF = {
 		-- end,
 	-- },
 	onyxcloak = {
-		order = 464,
+		order = 329,
 		list = "onyxcloaklist",
 		check = "checkonyxcloak",
 		default = true,
@@ -4092,7 +4092,7 @@ local BF = {
 		defaultboss = true,
 		defaulttrash = true,
 		checkzonedout = false,
-		selfbuff = true,
+		selfbuff = false,
 		timer = false,
 		core = true,
 		class = { WARRIOR = true, ROGUE = true, PRIEST = true, DRUID = true, PALADIN = true, HUNTER = true, MAGE = true, WARLOCK = true, SHAMAN = true,},
@@ -4133,13 +4133,13 @@ local BF = {
 		end,
 		icon = ITT[15138], -- Onyxia Scale Cloak
 		update = function(self)
-			RaidBuffStatus:DefaultButtonUpdate(self, report.onyxcloaklist, RaidBuffStatus.db.profile.checkonyxcloak, report.checking.onyxcloak or false, RaidBuffStatus.BF.intellect:buffers())
+			RaidBuffStatus:DefaultButtonUpdate(self, report.onyxcloaklist, RaidBuffStatus.db.profile.checkonyxcloak, report.checking.onyxcloak or false)
 		end,
 		click = function(self, button, down)
 			RaidBuffStatus:ButtonClick(self, button, down, "onyxcloak")
 		end,
 		tip = function(self)
-			RaidBuffStatus:Tooltip(self, L["Missing "] .. ITN[15138], report.onyxcloaklist, nil, RaidBuffStatus.BF.intellect:buffers())
+			RaidBuffStatus:Tooltip(self, L["Missing "] .. ITN[15138], report.onyxcloaklist, nil)
 		end,
 		singlebuff = nil,
 		partybuff = nil,

@@ -3594,7 +3594,7 @@ function RaidBuffStatus:ButtonClick(self, button, down, buffcheck, cheapspell, r
 	local check = BF[buffcheck].check
 	local prefix
 	if string.find(buffcheck, "onyxcloak") then
-		prefix = L["Missing item: "]
+		prefix = "Missing item: "
 	else
 		if RaidBuffStatus.db.profile[buffcheck .. "buff"] then
 		prefix = L["Missing buff: "]
