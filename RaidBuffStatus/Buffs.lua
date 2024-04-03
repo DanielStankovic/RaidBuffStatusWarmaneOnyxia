@@ -522,7 +522,6 @@ local shamanwepbuffs = {
 	L["(Windfury)"], -- Shaman self buff
 }
 
-
 local BF = {
 	-- pvp = {											-- button name
 		-- order = 1000,
@@ -2973,94 +2972,6 @@ local BF = {
 		end,
 	},
 
-	-- runescrollfortitude = {
-		-- order = 425,
-		-- list = "runescrollfortitudelist",
-		-- check = "checkrunescrollfortitude",
-		-- default = true,
-		-- defaultbuff = true,
-		-- defaultwarning = false,
-		-- defaultdash = true,
-		-- defaultdashcombat = false,
-		-- defaultboss = true,
-		-- defaulttrash = false,
-		-- checkzonedout = false,
-		-- chat = BS[69377], -- Fortitude
-		-- pre = function(self, raid, report)
-			-- if raid.ClassNumbers.PRIEST > 0 or not oRA or not raid.israid or raid.isbattle then
-				-- return
-			-- end
-			-- if not RaidBuffStatus.itemcheck.runescrollfortitude then
-				-- RaidBuffStatus.itemcheck.runescrollfortitude = {}
-				-- RaidBuffStatus.itemcheck.runescrollfortitude.results = {}
-				-- RaidBuffStatus.itemcheck.runescrollfortitude.list = "runescrollfortitudelist"
-				-- RaidBuffStatus.itemcheck.runescrollfortitude.check = "runescrollfortitude"
-				-- RaidBuffStatus.itemcheck.runescrollfortitude.next = 0
-				-- RaidBuffStatus.itemcheck.runescrollfortitude.item = "49632" -- Runescroll of Fortitude
-				-- RaidBuffStatus.itemcheck.runescrollfortitude.min = 0
-				-- RaidBuffStatus.itemcheck.runescrollfortitude.frequency = 60 * 5
-				-- RaidBuffStatus.itemcheck.runescrollfortitude.frequencymissing = 60 * 5
-			-- end
-		-- end,
-		-- main = function(self, name, class, unit, raid, report)
-			-- if raid.ClassNumbers.PRIEST > 0 then
-				-- return
-			-- end
-			-- report.checking.runescrollfortitude = true
-			-- if not unit.hasbuff[BS[69377]] then -- Fortitude
-				-- table.insert(report.runescrollfortitudelist, name)
-			-- end
-		-- end,
-		-- post = nil,
-		-- icon = ITT[49632], -- Runescroll of Fortitude
-		-- update = function(self)
-			-- RaidBuffStatus:DefaultButtonUpdate(self, report.runescrollfortitudelist, RaidBuffStatus.db.profile.checkrunescrollfortitude, report.checking.runescrollfortitude or false, RaidBuffStatus.BF.runescrollfortitude:buffers())
-		-- end,
-		-- click = function(self, button, down)
-			-- RaidBuffStatus:ButtonClick(self, button, down, "runescrollfortitude", nil, nil, nil, nil, ITN[49632]) -- Runescroll of Fortitude
-		-- end,
-		-- tip = function(self)
-			-- RaidBuffStatus:Tooltip(self, L["Missing "] .. ITN[49632], report.runescrollfortitudelist, nil, RaidBuffStatus.BF.runescrollfortitude:buffers()) -- Runescroll of Fortitude
-		-- end,
-		-- singlebuff = false,
-		-- partybuff = false,
-		-- raidbuff = true,
-		-- whispertobuff = function(reportl, prefix)
-			-- local thebuffers = RaidBuffStatus.BF.runescrollfortitude:buffers()
-			-- if not thebuffers then
-				-- return
-			-- end
-			-- for _,name in ipairs(thebuffers) do
-				-- name = string.sub(name, 1, name:find("%(") - 1)
-				-- if RaidBuffStatus:InMyZone(name) then
-					-- if RaidBuffStatus.db.profile.WhisperMany and #reportl >= RaidBuffStatus.db.profile.HowMany then
-						-- RaidBuffStatus:Say(prefix .. "<" .. RaidBuffStatus.BF.runescrollfortitude.chat .. ">: " .. L["MANY!"], name)
-					-- else
-						-- RaidBuffStatus:Say(prefix .. "<" .. RaidBuffStatus.BF.runescrollfortitude.chat .. ">: " .. table.concat(reportl, ", "), name)
-					-- end
-					-- if RaidBuffStatus.db.profile.whisperonlyone then
-						-- return
-					-- end
-				-- end
-			-- end
-		-- end,
-		-- buffers = function()
-			-- if not RaidBuffStatus.itemcheck.runescrollfortitude then
-				-- return
-			-- end
-			-- local thebuffers = {}
-				-- for _,rc in pairs(raid.classes) do
-					-- for name,_ in pairs(rc) do
-						-- local items = RaidBuffStatus.itemcheck.runescrollfortitude.results[name] or 0
-						-- if items > 0 then
-							-- table.insert(thebuffers, name .. "(" .. items .. ")")
-						-- end
-					-- end
-				-- end
-			-- return thebuffers
-		-- end,
-	-- },
-
 	shadow = {
 		order = 420,
 		list = "shadowlist",
@@ -4169,6 +4080,73 @@ local BF = {
 			-- return themages
 		-- end,
 	-- },
+	onyxcloak = {
+		order = 464,
+		list = "onyxcloaklist",
+		check = "checkonyxcloak",
+		default = true,
+		defaultbuff = true,
+		defaultwarning = false,
+		defaultdash = true,
+		defaultdashcombat = false,
+		defaultboss = true,
+		defaulttrash = true,
+		checkzonedout = false,
+		selfbuff = true,
+		timer = false,
+		core = true,
+		class = { WARRIOR = true, ROGUE = true, PRIEST = true, DRUID = true, PALADIN = true, HUNTER = true, MAGE = true, WARLOCK = true, SHAMAN = true,},
+		chat = ITN[15138], -- Onyxia Scale Cloak
+		pre = nil,
+		main = function(self, name, class, unit, raid, report)
+				
+				if _G.InspectFrame and _G.InspectFrame:IsShown() then
+				
+					return -- can't inspect at same time as UI
+				end
+			-- if RaidBuffStatus.inspectqueuename ~= "" then
+			-- print("Usao ovdeee22: ")
+				-- return  -- can't inspect as someone in the queue
+			-- end
+			 if not CanInspect(unit.unitid) then
+				 return
+			 end
+			 report.checking.onyxcloak = true
+			local missingCloak = true
+			
+			RBSToolScanner:ClearLines()
+			RBSToolScanner:SetInventoryItem(unit.unitid, 15) --15 is Cloak slot
+			if RBSToolScanner:NumLines() < 1 then
+			table.insert(report.onyxcloaklist, name)
+			else
+				local cloakName = getglobal('RBSToolScannerTextLeft' .. 1):GetText()
+				if cloakName then
+					if not string.find(cloakName, ITN[15138])then
+					table.insert(report.onyxcloaklist, name)
+					end
+				end 
+			end
+			
+		end,
+		post = function(self, raid, report)
+			RaidBuffStatus:SortNameBySuffix(report.onyxcloaklist)
+		end,
+		icon = ITT[15138], -- Onyxia Scale Cloak
+		update = function(self)
+			RaidBuffStatus:DefaultButtonUpdate(self, report.onyxcloaklist, RaidBuffStatus.db.profile.checkonyxcloak, report.checking.onyxcloak or false, RaidBuffStatus.BF.intellect:buffers())
+		end,
+		click = function(self, button, down)
+			RaidBuffStatus:ButtonClick(self, button, down, "onyxcloak")
+		end,
+		tip = function(self)
+			RaidBuffStatus:Tooltip(self, L["Missing "] .. ITN[15138], report.onyxcloaklist, nil, RaidBuffStatus.BF.intellect:buffers())
+		end,
+		singlebuff = nil,
+		partybuff = nil,
+		raidbuff = nil,
+		
+		
+	},
 	
 	checkpet = {
 		order = 330,

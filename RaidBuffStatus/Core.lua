@@ -3593,10 +3593,14 @@ function RaidBuffStatus:ButtonClick(self, button, down, buffcheck, cheapspell, r
 	local BF = RaidBuffStatus.BF
 	local check = BF[buffcheck].check
 	local prefix
-	if RaidBuffStatus.db.profile[buffcheck .. "buff"] then
-		prefix = L["Missing buff: "]
+	if string.find(buffcheck, "onyxcloak") then
+		prefix = L["Missing item: "]
 	else
+		if RaidBuffStatus.db.profile[buffcheck .. "buff"] then
+		prefix = L["Missing buff: "]
+		else
 		prefix = L["Warning: "]
+		end
 	end
 	if RaidBuffStatus.db.profile[check] then
 		local action = "none"
