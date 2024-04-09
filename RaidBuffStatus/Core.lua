@@ -2330,9 +2330,12 @@ function RaidBuffStatus:ReadUnit(unitid, unitindex)
 								istank = true
 							end
 						elseif class == "WARRIOR" then
-							if raid.classes.WARRIOR[name].spec == L["Protection"] then
+								if GUIDHasTalent(raid.classes.WARRIOR[name].guid, BS[12975]) then 
 								istank = true
-							end
+								end
+							-- if raid.classes.WARRIOR[name].spec == L["Protection"] then
+								-- istank = true
+							-- end
 						elseif class == "DRUID" then
 							local powerType = UnitPowerType(unitid) or -1
 							if powerType == 1 then -- bear form
@@ -2360,7 +2363,7 @@ function RaidBuffStatus:ReadUnit(unitid, unitindex)
 					istank = true
 				end
 			elseif class == "WARRIOR" then
-				if raid.classes.WARRIOR[name].spec == L["Protection"] then
+				if GUIDHasTalent(raid.classes.WARRIOR[name].guid, BS[12975]) then 
 					istank = true
 				end
 			elseif class == "DRUID" then
@@ -3556,6 +3559,7 @@ function RaidBuffStatus:Tooltip(self, title, list, tlist, blist, slist, ppmissin
 end
 
 function RaidBuffStatus:DefaultButtonUpdate(self, thosemissing, profile, checking, morework)
+	
 	if profile == false then
 		self.count:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
 		self.count:SetText("X")
